@@ -126,6 +126,46 @@ export const putSales = async (req, res) => {
   }
 };
 
+export const getSaleById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const saleQuery = `
+      SELECT 
+        s.id AS sale_id, 
+        s.date, 
+        s.total,
+        wh.name AS warehouse_name,
+        json_agg(
+          json_build_object(
+            'product_id', sp.products_id,
+            'product_name', p.name,
+            'quantity', sp.quantity,
+            'price', sp.price
+          )
+        ) AS items
+      FROM sales s
+      LEFT JOIN sales_products sp ON s.id = sp.sale_id
+      LEFT JOIN products p ON sp.products_id = p.id
+      LEFT JOIN wherehouse wh ON s.wherehouses_id = wh.id
+      WHERE s.id = $1
+      GROUP BY s.id, wh.name
+    `;
+
+    const saleResult = await pool.query(saleQuery, [id]);
+
+    if (saleResult.rowCount === 0) {
+      return res.status(404).json({ message: "Sale not found" });
+    }
+
+    res.status(200).json(saleResult.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Ошибка сервера");
+  }
+};
+
+
 export const deleteSales = async (req, res) => {
   const { id } = req.params;
   try {

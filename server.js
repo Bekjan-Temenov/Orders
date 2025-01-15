@@ -13,8 +13,8 @@ const port = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    methods: ["GET, POST, PUT, DELETE"],
+    origin: ["http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   })
 );
@@ -22,10 +22,13 @@ app.use(
 export const pool = new Pool({
   user: "postgres",
   password: "bekjan000",
+  host: "65.108.146.252", 
   host: "localhost",
   port: 5432,
   database: "waildberiez",
+  client_encoding: 'UTF8',
 });
+
 
 pool.connect((err, client, release) => {
   if (err) {

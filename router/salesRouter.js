@@ -1,5 +1,5 @@
 import express from "express";
-import {getSales ,  postSales , putSales ,deleteSales  } from "../controller/salesController.js"
+import {getSales ,  postSales , putSales ,deleteSales , getSaleById  } from "../controller/salesController.js"
 
 const router =  express.Router();
 /**
@@ -193,10 +193,27 @@ const router =  express.Router();
  *       200:
  *         description: Продажа успешно удалена 
  */
-
+/**
+ * @swagger
+ * /api/sales/get/{id}:
+ *   get:
+ *     summary: Получить продажу по ID
+ *     tags:
+ *       - Продажи
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID продажи
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Продажа успешно получена        
+ */
 router.get("/get" , getSales);
 router.post("/post" , postSales);
 router.put("/put/:id" , putSales);
 router.delete("/delete/:id" , deleteSales);
-
+router.get("/get/:id" , getSaleById);
 export default router
