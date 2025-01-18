@@ -17,7 +17,7 @@ const router = express.Router();
  *       - Продукты
  *     responses:
  *       200:
- *         description: Список всех продуктов                                                                           
+ *         description: Список всех продуктов
  */
 router.get("/get", getProduct);
 
@@ -39,6 +39,8 @@ router.get("/get", getProduct);
  *                 type: string
  *               code:
  *                 type: string
+ *               price:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Продукт успешно добавлен
@@ -47,11 +49,18 @@ router.post("/post", postProduct);
 
 /**
  * @swagger
- * /api/products/put:
+ * /api/products/put/{id}:
  *   put:
  *     summary: Обновить информацию о продукте
  *     tags:
  *       - Продукты
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID продукта
  *     requestBody:
  *       required: true
  *       content:
@@ -59,17 +68,22 @@ router.post("/post", postProduct);
  *           schema:
  *             type: object
  *             properties:
- *               id:
- *                 type: integer
  *               name:
  *                 type: string
  *               code:
  *                 type: string
+ *               price:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Продукт успешно обновлен
+ *       404:
+ *         description: Продукт не найден
+ *       500:
+ *         description: Ошибка сервера
  */
 router.put("/put/:id", updateProduct);
+
 
 /**
  * @swagger

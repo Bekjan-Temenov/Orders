@@ -12,15 +12,15 @@ export const getProduct = async (req, res) => {
 
 export const postProduct = async (req, res) => {
   try {
-    const { name, code } = req.body;
+    const { name, code  , price} = req.body;
 
-    if (!name || !code) {
+    if (!name || !code  || !price ) {
       return res.status(400).json({ error: "Name и Code обязательны" });
     }
 
     const result = await pool.query(
-      "INSERT INTO products (name, code) VALUES ($1, $2) RETURNING *",
-      [name.trim(), code.trim()]
+      "INSERT INTO products (name, code, price) VALUES ($1, $2, $3) RETURNING *",
+      [name.trim(), code.trim() , price.trim()]
     );
 
     res.status(201).json(result.rows[0]);
@@ -32,11 +32,11 @@ export const postProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, code } = req.body;
+  const { name, code , price } = req.body;
   try {
     const result = await pool.query(
-      "UPDATE products SET name = $1, code = $2 WHERE id = $3 RETURNING *",
-      [name, code, id]
+      "UPDATE products SET name = $1, code = $2 , price = $3 WHERE id = $4 RETURNING *",
+      [name, code, price , id ]
     );
     if (result.rows.length === 0) {
       return res.status(404).send("Продукт не найден");
